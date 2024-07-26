@@ -5,11 +5,11 @@ from torch.utils.data import DataLoader
 from segmentation.U_Net import U_Net
 
 # Provided Trainer class
-from trainmodel.trainer import Trainer  # Ensure Trainer is imported from the correct file
+from segmentation.trainer import Trainer  # Ensure Trainer is imported from the correct file
 
 
 # Set the training hyperparameters
-datadir = '/mnt/c/Unet/segDataset/'
+datadir = r'C:\Users\sorokin\Documents\testing\S-Eye\data\\'
 
 batch_size = 4
 lr = 0.001

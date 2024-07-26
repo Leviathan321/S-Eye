@@ -10,7 +10,7 @@ import torchvision.transforms.functional as TF
 from collections import namedtuple
 from tqdm import tqdm
 import cv2 as cv2
-
+import re
 
 class Dataset(Dataset):
     def __init__(self, root, split='train', augment=False):
@@ -32,15 +32,24 @@ class Dataset(Dataset):
 
         }
         self.num_classes = 2
+
+        def extract_number_from_filename(filename):
+            # Define a regular expression pattern to find numbers
+            pattern = r'\d+'
+            # Find all numbers in the filename
+            numbers = re.findall(pattern, filename)
+            # Join numbers into a single string or return a list of numbers
+            return numbers[0]
         # =============================================
         # Read in the paths to all images
         # =============================================
         #for case of original jpg and segmentation png use 3 and 5 else use 2
-        for file_name in os.listdir(self.images_dir):
+        for i, file_name in enumerate(os.listdir(self.images_dir)):
             self.images.append(os.path.join(self.images_dir, file_name))
             #target_name = 'segmentation_{}'.format('_'.join(file_name.split('_')[1:]))
             file_name_without_extension = file_name.split('.')[0]
-            target_name = 'segmentation_{}.png'.format('_'.join(file_name_without_extension.split('_')[1:]))
+            # target_name = 'segmentation_{}.png'.format('_'.join(file_name_without_extension.split('_')[1:]))
+            target_name = f'segmentation_image_{extract_number_from_filename(file_name)}.jpg'
             # target_name = '{}_{}'.format(file_name.split('_leftImg8bit')[0], 'gtFine_color.png')
             self.targets.append(os.path.join(self.targets_dir, target_name))
 

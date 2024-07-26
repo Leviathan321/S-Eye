@@ -25,13 +25,13 @@ def plot_loss(train_loss, val_loss, save_path):
     return save_path
 
 
-def denormalize(tensor):
+def denormalize(tensor, cuda_enabled = False):
     mean = [0.485, 0.456, 0.406]
     std = [0.229, 0.224, 0.225]
     dtype = tensor.dtype
     mean = torch.tensor(mean).to(dtype).reshape(1, 3, 1, 1)
     std = torch.tensor(std).to(dtype).reshape(1, 3, 1, 1)
-    return (tensor * std + mean).to('cuda')
+    return (tensor * std + mean).to('cuda' if cuda_enabled else 'cpu')
 
 
 class ResultSaver:

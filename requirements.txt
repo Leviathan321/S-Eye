@@ -1,0 +1,17 @@
+matplotlib
+numpy
+opencv-python
+pandas
+pillow
+scikit-learn
+scipy
+keras
+tensorflow
+tf-keras-vis
+tqdm
+eventlet
+flask
+h5py
+
+torch
+torchvision
