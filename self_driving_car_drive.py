@@ -189,7 +189,9 @@ if __name__ == '__main__':
 
     # load the self-driving car model
 
-    model_path = Path(os.path.join(cfg.SDC_MODELS_DIR, cfg.SDC_MODEL_NAME))
+    model_path = Path(os.path.join(cfg.SDC_MODELS_DIR, 
+                      cfg.SDC_MODEL_NAME)
+                      )
     #model_path = 'C:/Unet/track1-udacity-dave2-final.h5'
     if "chauffeur" in cfg.SDC_MODEL_NAME:
         model = load_model(model_path, custom_objects={"rmse": rmse})

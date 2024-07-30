@@ -1,3 +1,6 @@
+import sys 
+sys.path.insert(0,"C:\Users\sorokin\Documents\testing\segment")
+
 import torch
 import torch.nn as nn
 from segmentation.data_loader import Dataset
@@ -7,14 +10,18 @@ from segmentation.U_Net import U_Net
 # Provided Trainer class
 from segmentation.trainer import Trainer  # Ensure Trainer is imported from the correct file
 
-
 # Set the training hyperparameters
 datadir = r'C:\Users\sorokin\Documents\testing\S-Eye\data\\'
 
 batch_size = 4
 lr = 0.001
-epochs = 2
+epochs = 50
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+''' TODO readin matteos images, apply mask based labeling, pass to model '''
+
+
+''' TODO create own data loader '''
 
 # Initialize the dataset and dataloader
 train_dataset = Dataset(datadir, split='train', augment=False)
