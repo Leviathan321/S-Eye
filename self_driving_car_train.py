@@ -132,6 +132,7 @@ def train_model(model, cfg, x_train, x_test, y_train, y_test):
 
     # save the last model anyway (might not be the best)
     model.save(name)
+
 def seg_process(model, x_train, x_test, y_train, y_test, cfg):
     x_train, y_train = shuffle(x_train, y_train, random_state=0)
     x_test, y_test = shuffle(x_test, y_test, random_state=0)
@@ -140,6 +141,7 @@ def seg_process(model, x_train, x_test, y_train, y_test, cfg):
 
     val_generator = Generator(x_test, y_test, False, cfg)
     return train_generator, val_generator
+
 def main():
     from models.model2 import U_Net
     import torch

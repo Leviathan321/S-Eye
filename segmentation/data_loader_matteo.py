@@ -12,12 +12,15 @@ from tqdm import tqdm
 import cv2 as cv2
 import re
 
-class Dataset(Dataset):
-    def __init__(self, root, split='train', augment=False):
+class DatasetMatteo(Dataset):
+    def __init__(self, 
+                root, 
+                images_dir = None , 
+                targets_dir = None,
+                split='train', augment=False):
         self.root = os.path.expanduser(root)
-        self.images_dir = os.path.join(self.root, 'images', split)
-        self.targets_dir = os.path.join(self.root, 'labels', split)
-        
+        self.images_dir = os.path.join(datadir, 'images') if images_dir is None else images_dir
+        self.targets_dir = os.path.join(datadir, 'targets') if targets_dir is None else targets_dir
         self.split = split
         self.augment = augment
         self.images = []
@@ -34,6 +37,8 @@ class Dataset(Dataset):
         }
         self.num_classes = 2
 
+        num_all = len(os.listdir(self.images_dir))
+       
         def extract_number_from_filename(filename):
             # Define a regular expression pattern to find numbers
             pattern = r'\d+'
@@ -53,6 +58,18 @@ class Dataset(Dataset):
             target_name = f'segmentation_image_{extract_number_from_filename(file_name)}.jpg'
             # target_name = '{}_{}'.format(file_name.split('_leftImg8bit')[0], 'gtFine_color.png')
             self.targets.append(os.path.join(self.targets_dir, target_name))
+        
+        print(f"num_all: {num_all}")
+        if self.split == "train":
+            self.images = self.images[10: int(num_all * 0.9)]
+            self.targets = self.targets[10: int(num_all * 0.9)]
+
+        elif self.split == "val":
+            self.images = self.images[int(num_all * 0.9):int(num_all * 0.95)]
+            self.targets = self.targets[int(num_all * 0.9):int(num_all * 0.95)]
+        else:
+            self.images = self.images[:int(num_all * 0.95)]
+            self.targets = self.targets[:int(num_all * 0.95)]
 
         self.normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                               std=[0.229, 0.224, 0.225])
@@ -111,7 +128,11 @@ class Dataset(Dataset):
         # Load the RGB image and target
         image = Image.open(self.images[index]).convert('RGB')
         target = Image.open(self.targets[index]).convert('L')
-        
+
+        # print(target.shape)
+        # print(target[0:10,0:100])
+        # input()
+
         # Apply random transformations if augmenting,
         # otherwise, just resize the image to the correct size
         if self.split == 'train':
@@ -176,12 +197,21 @@ if __name__ == '__main__':
         return Image.fromarray(tensor.byte().cpu().numpy().astype(np.uint8).transpose(1, 2, 0))
 
 
-    datadir = '/mnt/c/Unet/segmentation_dataset/'
-    train_dataset = Dataset(datadir, split='train', augment=True)
-    train_dataloader = DataLoader(train_dataset, batch_size=4, shuffle=True, num_workers=0)
+    datadir = r"C:\Users\sorokin\Documents\testing\segment\images_matteo"
+    images_dir = r"C:\Users\sorokin\Documents\testing\segment\images_matteo\beamng"
+    labels_dir = r"C:\Users\sorokin\Documents\testing\segment\output_matteo\beamng"
+    train_dataset = DatasetMatteo(datadir,
+                                  images_dir,
+                                  labels_dir, 
+                                  split='train', 
+                                  augment=True)
+    train_dataloader = DataLoader(train_dataset, 
+                                    batch_size=4, 
+                                    shuffle=True, 
+                                    num_workers=0)
     val_iter = iter(train_dataloader)
     images, masks, _ = next(val_iter)  # Get a batch
-    images, masks = images.to('cuda'), masks.to('cuda')
+    images, masks = images.to('cpu'), masks.to('cpu')
     images2, masks2 = images.to('cpu'), masks.to('cpu')
 
     idx = random.randint(0, images.size(0) - 1)

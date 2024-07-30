@@ -3,6 +3,7 @@ import torch.nn as nn
 from segmentation.data_loader import Dataset
 from torch.utils.data import DataLoader
 from segmentation.U_Net import U_Net
+from datetime import datetime
 
 # Provided Trainer class
 from segmentation.trainer import Trainer  # Ensure Trainer is imported from the correct file
@@ -43,3 +44,6 @@ trainer = Trainer(model=model,
 # Start training
 
 trainer.run(epochs=epochs)
+
+# time = datetime.now().strftime("%d-%m-%Y_%H-%M-%S")
+# model.save(f'./models/unet_segment_{time}.h5')

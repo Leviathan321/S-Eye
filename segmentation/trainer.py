@@ -81,7 +81,8 @@ class ResultSaver:
 
 class Trainer:
     def __init__(self, model, train_dataloader, val_dataloader, optimizer, loss_func, device,
-                 result_dir='/mnt/c/Unet/segmentation_dataset/result', checkpoint_path='./unet.pkl'):
+                 result_dir='./results/', 
+                 checkpoint_path='./models/'):
         self.model = model
         self.train_dataloader = train_dataloader
         self.val_dataloader = val_dataloader
@@ -183,7 +184,7 @@ class Trainer:
             # Check for early stopping
             epoch_str = str(epoch)
 
-            torch.save(self.model.state_dict(), 'SegmentationModel_CrossEntropyLoss' + epoch_str + '.pth')
+            torch.save(self.model.state_dict(), self.checkpoint_path + os.sep + 'SegmentationModel_CrossEntropyLoss' + epoch_str + '.pth')
         # torch.save(self.model.state_dict(), 'SegmentationModel.pth')  # Save latest model
         plot_loss(train_loss, val_loss, comparison_path_loss)
 
