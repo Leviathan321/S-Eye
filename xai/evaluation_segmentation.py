@@ -1,11 +1,11 @@
-from models.model2 import U_Net
+from segmentation.U_Net import U_Net
 import torch
 import matplotlib.pyplot as plt
 from matplotlib import image as mpimg
 import torchvision.transforms.functional as TF
 from torchvision import transforms
 import numpy as np
-from ThirdEye.ase22.utils import resize
+from utils import resize
 import os
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -89,7 +89,61 @@ def result(predicted_rgb, seg):
                 correct_prediction += 1
     return correct_prediction / all_pixel * 100
 
+def evaluation_sep_folders(model, 
+                        image_folder_path, 
+                        label_folder_path,
+                        num = None,
+                        prefix_img = 'image', 
+                        prefix_img_label = "segmentation",
+                        path_output_segmentation = './evaluation'):
+    '''
+    Show prediction results as histogram and img
+    '''
+    import os.path
+    files = os.listdir(image_folder_path)
 
+    if num is None:
+        num = len(files)
+        
+    img_files = [f for f in files if f.startswith(prefix_img)][:num]
+    ending = os.path.splitext(img_files[0])[1][1:].strip() 
+    a = 0
+    accuracy = []
+    for img_file in img_files:
+        img_path = os.path.join(image_folder_path, img_file)
+
+        img = mpimg.imread(img_path)
+
+        segmentation_name = prefix_img_label + "_"+ img_file[:-3] + ending
+        segmentation_path = os.path.join(label_folder_path, segmentation_name)
+        seg = mpimg.imread(segmentation_path)
+
+        x = preprocess(img)
+        with torch.no_grad():
+            prediction = model(x)
+
+        predicted_rgb = torch.zeros((3, prediction.size()[2], prediction.size()[3])).to('cpu')
+        maxindex = torch.argmax(prediction[0], dim=0).cpu().int()
+        predicted_rgb = class_to_rgb(maxindex).to('cpu')
+        predicted_rgb = predicted_rgb.squeeze().permute(1, 2, 0).numpy()
+
+        # print(result(predicted_rgb, seg))
+        accuracy.append(result(predicted_rgb, seg))
+
+        if a % 2:
+            fig, axs = plt.subplots(1, 2)
+            axs[0].imshow(img)
+            axs[0].set_title('Image')
+            axs[0].axis('off')
+
+            axs[1].imshow(predicted_rgb)
+            axs[1].set_title('prediction')
+            axs[1].axis('off')
+
+            plt.savefig(path_output_segmentation + os.sep + f"prediction_{img_file}")
+            plt.show()
+
+        a += 1
 def evaluation(model, image_folder_path):
     '''
     Show prediction results as histogram and img

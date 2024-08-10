@@ -184,8 +184,9 @@ class Trainer:
             # Check for early stopping
             epoch_str = str(epoch)
 
-            torch.save(self.model.state_dict(), self.checkpoint_path + os.sep + 'SegmentationModel_CrossEntropyLoss' + epoch_str + '.pth')
-        # torch.save(self.model.state_dict(), 'SegmentationModel.pth')  # Save latest model
+            # torch.save(self.model.state_dict(), self.checkpoint_path + os.sep + 'SegmentationModel_CrossEntropyLoss' + epoch_str + '.pth')
+        
+        torch.save(self.model.state_dict(), 'SegmentationModel.pth')  # Save latest model
         plot_loss(train_loss, val_loss, comparison_path_loss)
 
 if __name__ == '__main__':

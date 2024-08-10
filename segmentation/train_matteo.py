@@ -20,9 +20,9 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 ''' TODO readin matteos images, apply mask based labeling, pass to model '''
 
-datadir = r"C:\Users\sorokin\Documents\testing\segment\images_matteo"
-images_dir = r"C:\Users\sorokin\Documents\testing\segment\images_matteo\beamng"
-labels_dir = r"C:\Users\sorokin\Documents\testing\segment\output_matteo\beamng"
+datadir = "/home/lev/Projects/testing/Multi-Simulation/segment/images_matteo"
+images_dir = "/home/lev/Projects/testing/Multi-Simulation/segment/images_matteo/donkey"
+labels_dir = "/home/lev/Projects/testing/Multi-Simulation/segment/output_matteo/donkey"
 
 # Initialize the dataset and dataloader
 train_dataset = DatasetMatteo(datadir, 

@@ -10,7 +10,7 @@ from segmentation.trainer import Trainer  # Ensure Trainer is imported from the 
 
 
 # Set the training hyperparameters
-datadir = r'C:\Users\sorokin\Documents\testing\S-Eye\data\\'
+datadir = r'./data/'
 
 batch_size = 4
 lr = 0.001
