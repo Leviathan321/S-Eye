@@ -13,7 +13,9 @@ from maxitwo.utils.dataset_utils import load_archive
 SIMULATOR_NAMES = [BEAMNG_SIM_NAME, DONKEY_SIM_NAME, UDACITY_SIM_NAME]
 
 # path to repo where we colourmask based segmentation
-sys.path.insert(0,r"C:\Users\sorokin\Documents\testing\segment")
+#sys.path.insert(0,r"C:\Users\sorokin\Documents\testing\segment")
+sys.path.insert(0,r"/home/lev/Projects/testing/Multi-Simulation/segment")
+
 import segment_by_mask
 
 ''' Apply manual colour mask segmentation to retrieve data set for training/validation'''
@@ -45,9 +47,6 @@ def load_archive_into_datasets_segmented(
                 obs = numpy_dict["observations"]
 
                 # apply colour mask, actions are segmented images
-
-                actions = numpy_dict["actions"]
-
                 segmented_images = segment_by_mask.segment_from_arrays(obs, 
                         sim_name, 
                         output_folder = None,
@@ -139,7 +138,8 @@ def load_archive_into_datasets_segmented(
     return X_train, X_test, y_train, y_test
 
 if __name__ == '__main__':
-    archive_path = r"C:\\Users\\sorokin\\Downloads\\training_datasets\\"
+    #archive_path = r"C:\\Users\\sorokin\\Downloads\\training_datasets\\"
+    archive_path = r"~/Downloads/training_datasets/"
 
     seed = 1
     test_split = 0

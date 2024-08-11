@@ -27,8 +27,8 @@ class DatasetMatteo(Dataset):
         self.targets = []
         #150, 76
         self.mapping = {
-            149: 0,
-            29: 1
+            149: 0, # road?
+            29: 1 # non-road?
         }
         self.mappingrgb = {
             149: (0, 255, 0),
